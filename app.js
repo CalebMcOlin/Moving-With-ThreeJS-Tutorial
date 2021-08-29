@@ -52,7 +52,7 @@ function init() {
  * Adding simple item in the scene
  * 
  * @param {number} radius of the item
- * @param {Object} pos object containing position data { x: number, y: number, z: number }
+ * @param {Object} pos item containing position data { x: number, y: number, z: number }
  */
 function addItem(radius, pos) {
     let item = new THREE.Mesh(
@@ -69,17 +69,15 @@ function addItem(radius, pos) {
  * If true, function updates item's location based on mouse postion
  * If false, function does nothing
  */
-function dragObject() {
-    // If 'holding' item, move item
+function dragItem() {
+    // If 'holding' an item, move the item
     if (draggableItem) {
         raycaster.setFromCamera(moveMouse, camera);
         const found = raycaster.intersectObjects(scene.children);
         if (found.length > 0) {
-            for (let o of found) {
-                if (!o.object.name === 'GROUND')
-                    continue
-                draggableItem.position.x = o.point.x;
-                draggableItem.position.z = o.point.z;
+            for (let i of found) {
+                draggableItem.position.x = i.point.x;
+                draggableItem.position.z = i.point.z;
             }
         }
     }
@@ -87,13 +85,13 @@ function dragObject() {
 
 // Allows user to pick up and drop items on-click events
 window.addEventListener('click', event => {
-    // If 'holding' an item on-click, set to <undefined> to 'drop' the item.
+    // If 'holding' item on-click, set container to <undefined> to 'drop' the item.
     if (draggableItem) {
         draggableItem = undefined;
         return;
     }
 
-    // If NOT 'holding' an item on-click, set to <object> to 'pickup' the item.
+    // If NOT 'holding' item on-click, set container to <object> to 'pickup' the item.
     clickMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     clickMouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(clickMouse, camera);
@@ -103,18 +101,18 @@ window.addEventListener('click', event => {
     }
 });
 
-// Constantly updates the mouse location for use in `dragObject()`
+// Constantly updates the mouse location for use in `dragItem()`
 window.addEventListener('mousemove', event => {
     moveMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     moveMouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 });
 
 // Recursive function to render the scene
-function renderScene() {
-    dragObject(); // Constantly calling this allows the object to be moved every render
+function animate() {
+    dragItem(); // Constantly calling this allows the item to be moved every render
     controls.update();
     renderer.render(scene, camera);
-    requestAnimationFrame(renderScene);
+    requestAnimationFrame(animate);
 };
 
 // Re-renders the scene upon window resize
@@ -129,5 +127,5 @@ function onWindowResize() {
     window.addEventListener('resize', onWindowResize, false);
     init();
     addItem(8, { x: 0, y: 6, z: 0 });
-    renderScene();
+    animate();
 })();
