@@ -1,5 +1,6 @@
 import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader.js';
 
 // Global variables
 let scene, camera, renderer, controls, clickMouse, moveMouse, raycaster, draggableModel;
@@ -48,24 +49,8 @@ function init() {
     scene.add(floor);
 };
 
-// /**
-//  * Adding simple item in the scene
-//  * 
-//  * @param {number} radius of the item
-//  * @param {Object} pos item containing position data { x: number, y: number, z: number }
-//  */
-// function addItem(radius, pos) {
-//     let item = new THREE.Mesh(
-//         new THREE.CylinderBufferGeometry(radius, radius, 10, 50),
-//         new THREE.MeshPhongMaterial({ color: '#FF0000' })
-//     );
-//     item.position.set(pos.x, pos.y, pos.z);
-//     item.isDraggable = true;
-//     scene.add(item);
-// };
-
 /** 
- * Loads the 3D model
+ * Adds a simple to the scene
  * 
  * @param {string} dir Folder name that holds the .gltf file.
  * @param {Object} pos object containing position data { x: number, y: number, z: number }
@@ -73,7 +58,7 @@ function init() {
 function addModel(dir, pos) {
     const loader = new GLTFLoader();
     loader.load(`res/${dir}/scene.gltf`, (gltf) => {
-        model = gltf.scene;
+        const model = gltf.scene;
         model.position.set(pos.x, pos.y, pos.z);
         model.isDraggable = true;
         scene.add(model);
@@ -112,20 +97,28 @@ window.addEventListener('click', event => {
     clickMouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(clickMouse, camera);
     const found = raycaster.intersectObjects(scene.children, true);
-    if (found.length > 0 && found[0].object.isDraggable) {
-        draggableModel = found[0].object;
+    if (found.length) {
+        // Cycle upwards through every parent until it reaches the topmost layer
+        // This top layer is the group created by the GLTFLoader function
+        let current = found[0].object;
+        while (current.parent.parent !== null) {
+            current = current.parent;
+        }
+        if (current.isDraggable) {
+            draggableModel = current;
+        }
     }
 });
 
 // Constantly updates the mouse location for use in `dragModel()`
 window.addEventListener('mousemove', event => {
+    dragModel(); // Allows the model to move alongside the mouse as it moves
     moveMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     moveMouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 });
 
 // Recursive function to render the scene
 function animate() {
-    dragModel(); // Constantly calling this allows the model to be moved every render
     controls.update();
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
@@ -142,6 +135,6 @@ function onWindowResize() {
 (function () {
     window.addEventListener('resize', onWindowResize, false);
     init();
-    addModel('vase', { x: 0, y: 6, z: 0 });
+    addModel('saturnV', { x: 0, y: 10, z: 0 });
     animate();
 })();
