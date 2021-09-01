@@ -2,7 +2,14 @@ import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js';
 
 // Global variables
-let scene, camera, renderer, controls, clickMouse, moveMouse, raycaster, draggableObject;
+let scene,
+    camera,
+    renderer,
+    controls,
+    clickMouse,
+    moveMouse,
+    raycaster,
+    draggableObject;
 
 // Create Scene and lights
 function init() {
@@ -41,7 +48,7 @@ function init() {
 
     // FLOOR
     let floor = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(200, 3, 200),
+        new THREE.BoxBufferGeometry(2000, 3, 2000),
         new THREE.MeshPhongMaterial({ color: 0x1B8F06 })
     );
     floor.isDraggable = false;
@@ -58,7 +65,7 @@ function init() {
 function addObject(radius, pos, color) {
     let object = new THREE.Mesh(
         new THREE.CylinderBufferGeometry(radius, radius, 10, 50),
-        new THREE.MeshPhongMaterial({ color: color})
+        new THREE.MeshPhongMaterial({ color: color })
     );
     object.position.set(pos.x, pos.y, pos.z);
     object.isDraggable = true;
@@ -75,7 +82,7 @@ function dragObject() {
     if (draggableObject) {
         raycaster.setFromCamera(moveMouse, camera);
         const found = raycaster.intersectObjects(scene.children);
-        if (found.length > 0) {
+        if (found.length) {
             for (let i of found) {
                 draggableObject.position.x = i.point.x;
                 draggableObject.position.z = i.point.z;
@@ -97,7 +104,7 @@ window.addEventListener('click', event => {
     clickMouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(clickMouse, camera);
     const found = raycaster.intersectObjects(scene.children, true);
-    if (found.length > 0 && found[0].object.isDraggable) {
+    if (found.length && found[0].object.isDraggable) {
         draggableObject = found[0].object;
     }
 });
