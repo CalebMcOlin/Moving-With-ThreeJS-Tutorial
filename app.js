@@ -135,6 +135,6 @@ function onWindowResize() {
 (function () {
     window.addEventListener('resize', onWindowResize, false);
     init();
-    addModel('saturnV', { x: 0, y: 10, z: 0 });
+    addModel('saturnV', { x: 0, y: 1, z: 0 });
     animate();
 })();

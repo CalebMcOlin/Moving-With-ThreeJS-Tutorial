@@ -1,1 +1,2 @@
-Tutorial repository that shows how to move different types of objects, groups and models within Three.js
+# Description 
+This branch is a basic example of how to use [three.js](https://threejs.org/) to move imported models in a browser with the mouse.
