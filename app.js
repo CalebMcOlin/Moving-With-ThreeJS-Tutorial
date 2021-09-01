@@ -53,11 +53,12 @@ function init() {
  * 
  * @param {number} radius of the item
  * @param {Object} pos item containing position data { x: number, y: number, z: number }
+ * @param {Color} color hex code for color of item
  */
-function addItem(radius, pos) {
+function addItem(radius, pos, col) {
     let item = new THREE.Mesh(
         new THREE.CylinderBufferGeometry(radius, radius, 10, 50),
-        new THREE.MeshPhongMaterial({ color: '#FF0000' })
+        new THREE.MeshPhongMaterial({ color: col})
     );
     item.position.set(pos.x, pos.y, pos.z);
     item.isDraggable = true;
@@ -126,6 +127,11 @@ function onWindowResize() {
 (function () {
     window.addEventListener('resize', onWindowResize, false);
     init();
-    addItem(8, { x: 0, y: 6, z: 0 });
+    // Adding multiple items
+    addItem(8, { x: 0, y: 6, z: 0 }, '#FF0000');
+    addItem(8, { x: 15, y: 6, z: 15 }, '#313DF8');
+    addItem(8, { x: -15, y: 6, z: -15 }, '#000000');
+    addItem(8, { x: -15, y: 6, z: 15 }, '#EF0A61');
+    addItem(8, { x: 15, y: 6, z: -15 }, '#CAB21D');
     animate();
 })();
