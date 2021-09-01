@@ -2,7 +2,7 @@ import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js';
 
 // Global variables
-let scene, camera, renderer, controls, clickMouse, moveMouse, raycaster, draggableItem;
+let scene, camera, renderer, controls, clickMouse, moveMouse, raycaster, draggableObject;
 
 // Create Scene and lights
 function init() {
@@ -41,7 +41,7 @@ function init() {
 
     // FLOOR
     let floor = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(2000, 3, 2000),
+        new THREE.BoxBufferGeometry(200, 3, 200),
         new THREE.MeshPhongMaterial({ color: 0x1B8F06 })
     );
     floor.isDraggable = false;
@@ -49,60 +49,60 @@ function init() {
 };
 
 /**
- * Adding simple item in the scene
+ * Adding simple object in the scene
  * 
- * @param {number} radius of the item
- * @param {Object} pos item containing position data { x: number, y: number, z: number }
- * @param {Color} color hex code for color of item
+ * @param {number} radius of the object
+ * @param {Object} pos object containing position data { x: number, y: number, z: number }
+ * @param {Color} color hex code for color of object
  */
-function addItem(radius, pos, col) {
-    let item = new THREE.Mesh(
+function addObject(radius, pos, color) {
+    let object = new THREE.Mesh(
         new THREE.CylinderBufferGeometry(radius, radius, 10, 50),
-        new THREE.MeshPhongMaterial({ color: col})
+        new THREE.MeshPhongMaterial({ color: color})
     );
-    item.position.set(pos.x, pos.y, pos.z);
-    item.isDraggable = true;
-    scene.add(item);
+    object.position.set(pos.x, pos.y, pos.z);
+    object.isDraggable = true;
+    scene.add(object);
 };
 
 /**
- * Checks if the user is 'holding' and item.
- * If true, function updates item's location based on mouse postion
+ * Checks if the user is 'holding' an object.
+ * If true, function updates object's location based on mouse postion
  * If false, function does nothing
  */
-function dragItem() {
-    // If 'holding' an item, move the item
-    if (draggableItem) {
+function dragObject() {
+    // If 'holding' an object, move the object
+    if (draggableObject) {
         raycaster.setFromCamera(moveMouse, camera);
         const found = raycaster.intersectObjects(scene.children);
         if (found.length > 0) {
             for (let i of found) {
-                draggableItem.position.x = i.point.x;
-                draggableItem.position.z = i.point.z;
+                draggableObject.position.x = i.point.x;
+                draggableObject.position.z = i.point.z;
             }
         }
     }
 };
 
-// Allows user to pick up and drop items on-click events
+// Allows user to pick up and drop objects on-click events
 window.addEventListener('click', event => {
-    // If 'holding' item on-click, set container to <undefined> to 'drop' the item.
-    if (draggableItem) {
-        draggableItem = undefined;
+    // If 'holding' object on-click, set container to <undefined> to 'drop' the object.
+    if (draggableObject) {
+        draggableObject = undefined;
         return;
     }
 
-    // If NOT 'holding' item on-click, set container to <object> to 'pickup' the item.
+    // If NOT 'holding' object on-click, set container to <object> to 'pickup' the object.
     clickMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     clickMouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(clickMouse, camera);
     const found = raycaster.intersectObjects(scene.children, true);
     if (found.length > 0 && found[0].object.isDraggable) {
-        draggableItem = found[0].object;
+        draggableObject = found[0].object;
     }
 });
 
-// Constantly updates the mouse location for use in `dragItem()`
+// Constantly updates the mouse location for use in `dragObject()`
 window.addEventListener('mousemove', event => {
     moveMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     moveMouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
@@ -110,7 +110,7 @@ window.addEventListener('mousemove', event => {
 
 // Recursive function to render the scene
 function animate() {
-    dragItem(); // Constantly calling this allows the item to be moved every render
+    dragObject(); // Constantly calling this allows the object to be moved every render
     controls.update();
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
@@ -127,11 +127,11 @@ function onWindowResize() {
 (function () {
     window.addEventListener('resize', onWindowResize, false);
     init();
-    // Adding multiple items
-    addItem(8, { x: 0, y: 6, z: 0 }, '#FF0000');
-    addItem(8, { x: 15, y: 6, z: 15 }, '#313DF8');
-    addItem(8, { x: -15, y: 6, z: -15 }, '#000000');
-    addItem(8, { x: -15, y: 6, z: 15 }, '#EF0A61');
-    addItem(8, { x: 15, y: 6, z: -15 }, '#CAB21D');
+    // Adding multiple objects
+    addObject(8, { x: 0, y: 6, z: 0 }, '#FF0000');
+    addObject(8, { x: 15, y: 6, z: 15 }, '#313DF8');
+    addObject(8, { x: -15, y: 6, z: -15 }, '#000000');
+    addObject(8, { x: -15, y: 6, z: 15 }, '#EF0A61');
+    addObject(8, { x: 15, y: 6, z: -15 }, '#CAB21D');
     animate();
 })();
