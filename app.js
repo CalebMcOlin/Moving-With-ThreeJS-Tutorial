@@ -77,8 +77,11 @@ function dragModel() {
         const found = raycaster.intersectObjects(scene.children);
         if (found.length > 0) {
             for (let obj3d of found) {
-                draggableModel.position.x = obj3d.point.x;
-                draggableModel.position.z = obj3d.point.z;
+                if (!obj3d.object.isDraggablee) {
+                    draggableModel.position.x = obj3d.point.x;
+                    draggableModel.position.z = obj3d.point.z;
+                    break;
+                }
             }
         }
     }
