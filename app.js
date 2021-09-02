@@ -115,13 +115,13 @@ window.addEventListener('click', event => {
 
 // Constantly updates the mouse location for use in `dragObject()`
 window.addEventListener('mousemove', event => {
+    dragObject(); // Updates the objects postion every time the mouse moves
     moveMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     moveMouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 });
 
 // Recursive function to render the scene
 function animate() {
-    dragObject(); // Constantly calling this allows the object to be moved every render
     controls.update();
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
