@@ -115,7 +115,7 @@ window.addEventListener('click', event => {
 
 // Constantly updates the mouse location for use in `dragModel()`
 window.addEventListener('mousemove', event => {
-    dragModel(); // Allows the model to move alongside the mouse as it moves
+    dragModel(); // Updates the model's postion everytime the mouse moves
     moveMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     moveMouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 });
