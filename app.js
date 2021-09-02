@@ -81,11 +81,15 @@ function dragObject() {
     // If 'holding' an object, move the object
     if (draggableObject) {
         raycaster.setFromCamera(moveMouse, camera);
+        // `found` is the metadata of the objects, not the objetcs themsevles  
         const found = raycaster.intersectObjects(scene.children);
         if (found.length) {
             for (let obj3d of found) {
-                draggableObject.position.x = obj3d.point.x;
-                draggableObject.position.z = obj3d.point.z;
+                if (!obj3d.object.isDraggablee) {
+                    draggableObject.position.x = obj3d.point.x;
+                    draggableObject.position.z = obj3d.point.z;
+                    break;
+                }
             }
         }
     }
