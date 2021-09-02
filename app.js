@@ -55,9 +55,9 @@ function init() {
  * @param {string} dir Folder name that holds the .gltf file.
  * @param {Object} pos object containing position data { x: number, y: number, z: number }
  */
-function addModel(dir, pos) {
+function addModel(pos) {
     const loader = new GLTFLoader();
-    loader.load(`res/${dir}/scene.gltf`, (gltf) => {
+    loader.load(`res/saturnV/scene.gltf`, (gltf) => {
         const model = gltf.scene;
         model.position.set(pos.x, pos.y, pos.z);
         model.isDraggable = true;
@@ -76,9 +76,9 @@ function dragModel() {
         raycaster.setFromCamera(moveMouse, camera);
         const found = raycaster.intersectObjects(scene.children);
         if (found.length > 0) {
-            for (let i of found) {
-                draggableModel.position.x = i.point.x;
-                draggableModel.position.z = i.point.z;
+            for (let obj3d of found) {
+                draggableModel.position.x = obj3d.point.x;
+                draggableModel.position.z = obj3d.point.z;
             }
         }
     }
@@ -135,6 +135,6 @@ function onWindowResize() {
 (function () {
     window.addEventListener('resize', onWindowResize, false);
     init();
-    addModel('saturnV', { x: 0, y: 1, z: 0 });
+    addModel({ x: 0, y: 1, z: 0 });
     animate();
 })();
