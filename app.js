@@ -83,9 +83,9 @@ function dragObject() {
         raycaster.setFromCamera(moveMouse, camera);
         const found = raycaster.intersectObjects(scene.children);
         if (found.length) {
-            for (let i of found) {
-                draggableObject.position.x = i.point.x;
-                draggableObject.position.z = i.point.z;
+            for (let obj3d of found) {
+                draggableObject.position.x = obj3d.point.x;
+                draggableObject.position.z = obj3d.point.z;
             }
         }
     }
