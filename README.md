@@ -8,7 +8,7 @@ This branch is shows a basic example of how to use [three.js](https://threejs.or
 - Use the [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) VSCode extention.
 
 **Option 2:**
-- Access the live [demo](https://codesandbox.io/s/u34lr) on codesandbox.
+- Access the live [demo](https://codesandbox.io/s/jq963) on codesandbox.
 
 ## Model Credits
 Saturn V by [Stanley Creative](https://sketchfab.com/Stanley_Creative)
